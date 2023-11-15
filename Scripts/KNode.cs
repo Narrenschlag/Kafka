@@ -5,9 +5,9 @@ using Godot;
 namespace Kafka
 {
     [GlobalClass]
-    public partial class LocalStatement : Resource
+    public partial class KNode : Resource
     {
-        public StatementContainer Statement;
+        public StatementContainer Statement = new StatementContainer();
         public string[] optionStrings;
 
         public Node LocalNode;
@@ -23,7 +23,7 @@ namespace Kafka
     }
 
     #region Statement Struct
-    public struct StatementContainer
+    public class StatementContainer
     {
         public string Name { get; set; }
         public string Text { get; set; }

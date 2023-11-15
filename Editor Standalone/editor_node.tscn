@@ -1,0 +1,106 @@
+[gd_scene load_steps=5 format=3 uid="uid://dvuchr07bdujd"]
+
+[ext_resource type="Script" path="res://Narrenschlag/Kafka/Editor Standalone/NodeEditor.cs" id="1_2r8mb"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8c05v"]
+bg_color = Color(0.133333, 0.133333, 0.133333, 1)
+corner_radius_top_right = 128
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_766rj"]
+bg_color = Color(0.133333, 0.133333, 0.133333, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5lcu2"]
+bg_color = Color(0.133333, 0.133333, 0.133333, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+
+[node name="Window" type="Window" node_paths=PackedStringArray("Key", "Name", "Content", "saveButton", "settingButton")]
+title = "Node Editor"
+initial_position = 1
+size = Vector2i(480, 270)
+always_on_top = true
+script = ExtResource("1_2r8mb")
+Key = NodePath("VBoxContainer/Key/Key")
+Name = NodePath("VBoxContainer/Name/Name")
+Content = NodePath("VBoxContainer/VBoxContainer/CodeEdit")
+saveButton = NodePath("VBoxContainer/VBoxContainer/HBoxContainer/Save")
+settingButton = NodePath("VBoxContainer/VBoxContainer/HBoxContainer/Settings")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.180392, 0.180392, 0.180392, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 4
+
+[node name="Key" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="Label" type="Label" parent="VBoxContainer/Key"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = " Unique Key"
+
+[node name="Key" type="LineEdit" parent="VBoxContainer/Key"]
+custom_minimum_size = Vector2(240, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+expand_to_text_length = true
+
+[node name="Name" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="Label" type="Label" parent="VBoxContainer/Name"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = " Name"
+
+[node name="Name" type="LineEdit" parent="VBoxContainer/Name"]
+custom_minimum_size = Vector2(240, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+expand_to_text_length = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_constants/separation = 32
+
+[node name="Label" type="Label" parent="VBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_8c05v")
+text = " Content"
+
+[node name="Save" type="Button" parent="VBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_766rj")
+text = " Save "
+
+[node name="Settings" type="Button" parent="VBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_5lcu2")
+text = " Connection Settings "
+
+[node name="CodeEdit" type="CodeEdit" parent="VBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3

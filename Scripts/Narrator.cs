@@ -18,8 +18,8 @@ namespace Kafka
 
 		private static Narrator Singleton;
 
-		public LocalConversation Conversation;
-		public LocalStatement Statement;
+		public KConversation Conversation;
+		public KNode KNode;
 		public bool Valid;
 
 		[Signal] public delegate void PlayAudioEventHandler(float pitch);
@@ -53,8 +53,8 @@ namespace Kafka
 			path = path.Remove(path.Length);
 		}
 
-		public static void SetLocalNode(Node node) { if (node.NotNull() && Singleton.NotNull() && Singleton.Valid) Singleton.Statement.LocalNode = node; }
-		public static Node GetLocalNode() => Singleton.NotNull() && Singleton.Valid ? Singleton.Statement.LocalNode : null;
+		public static void SetLocalNode(Node node) { if (node.NotNull() && Singleton.NotNull() && Singleton.Valid) Singleton.KNode.LocalNode = node; }
+		public static Node GetLocalNode() => Singleton.NotNull() && Singleton.Valid ? Singleton.KNode.LocalNode : null;
 		public static void Load(string globalOrLocalKey, Node source)
 		{
 			if (Singleton.IsNull()) return;
@@ -76,7 +76,7 @@ namespace Kafka
 			}
 
 			// Load local
-			else if (Valid) load(Conversation.Path, pathKey, source);
+			else if (Valid) load(Conversation.LocalPath, pathKey, source);
 		}
 
 		/// <summary>
@@ -85,13 +85,13 @@ namespace Kafka
 		public void load(string path, string key, Node source)
 		{
 			if (path.IsEmpty()) return;
-			Statement = null;
+			KNode = null;
 
-			if (Conversation.IsNull() || !path.Trim().Equals(Conversation.Path) || !Conversation.Entries.ContainsKey(key = key.Trim()))
-				LocalConversation.TryLoad(path, key, out Conversation);
+			if (Conversation.IsNull() || !path.Trim().Equals(Conversation.LocalPath) || !Conversation.Entries.ContainsKey(key = key.Trim()))
+				KConversation.TryLoad(path, key, out Conversation);
 
 			if (Conversation.NotNull())
-				Conversation.TryLoad(key, source, out Statement);
+				Conversation.TryLoad(key, source, out KNode);
 
 			reload();
 		}
@@ -104,14 +104,14 @@ namespace Kafka
 		public void reload()
 		{
 			// Validation
-			Valid = Conversation.NotNull() && Statement.NotNull();
+			Valid = Conversation.NotNull() && KNode.NotNull();
 
 			// Follow type
-			FollowType = !Valid ? FollowType.Close : Statement.optionStrings.NotEmpty() ? FollowType.Options : FollowType.Next;
+			FollowType = !Valid ? FollowType.Close : KNode.optionStrings.NotEmpty() ? FollowType.Options : FollowType.Next;
 
 			// Printer
 			if (Printer.NotNull()) Printer.SetActive(Valid);
-			if (Valid && Printer.NotNull()) Printer.Print(Statement.Statement);
+			if (Valid && Printer.NotNull()) Printer.Print(KNode.Statement);
 
 			// For custom visuals
 			if (VisibleCasts.NotEmpty())
@@ -126,17 +126,17 @@ namespace Kafka
 				if (FollowType == FollowType.Close) close();
 				else next();
 
-			else if (!Valid || Statement.Statement.Options.IsEmpty()) next();
+			else if (!Valid || KNode.Statement.Options.IsEmpty()) next();
 			else
 			{
-				KeyValuePair<string, string> option = Statement.Statement.Options.GetClampedElement(i);
+				KeyValuePair<string, string> option = KNode.Statement.Options.GetClampedElement(i);
 
 				// Execute commands
 				if (option.Value.NotEmpty() && Printer != null)
 					Printer.ExecuteStringCmds(option.Value);
 
 				if (option.Key.IsEmpty()) close();
-				else load(option.Key, Statement.LocalNode);
+				else load(option.Key, KNode.LocalNode);
 			}
 		}
 
@@ -151,14 +151,14 @@ namespace Kafka
 				return;
 			}
 
-			KeyValuePair<string, string> next = Statement.next;
+			KeyValuePair<string, string> next = KNode.next;
 
 			// Execute commands
 			if (next.Value.NotEmpty() && Printer != null)
 				Printer.ExecuteStringCmds(next.Value);
 
 			if (next.Key.IsEmpty()) close();
-			else load(next.Key, Statement.LocalNode);
+			else load(next.Key, KNode.LocalNode);
 		}
 
 		public void close()
