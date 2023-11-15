@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://gfr72pegv4bp"]
+
+[ext_resource type="Script" path="res://Narrenschlag/Kafka/Scripts/Narrator.cs" id="1_ywnnv"]
+[ext_resource type="Script" path="res://Narrenschlag/Kafka/Scripts/Debug.cs" id="2_tkxlc"]
+[ext_resource type="Script" path="res://Narrenschlag/Kafka/Scripts/Printer.cs" id="3_7dfii"]
+
+[node name="Node" type="Node"]
+
+[node name="Narrator" type="Node" parent="." node_paths=PackedStringArray("Printer", "VisibleCasts")]
+script = ExtResource("1_ywnnv")
+Printer = NodePath("../Printer")
+VisibleCasts = []
+
+[node name="Debugger" type="Node" parent="Narrator" node_paths=PackedStringArray("Narrator")]
+script = ExtResource("2_tkxlc")
+Narrator = NodePath("..")
+GlobalPath = "test:0"
+Active = true
+
+[node name="Printer" type="Node" parent="."]
+script = ExtResource("3_7dfii")
+Output = 3
