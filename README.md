@@ -2,6 +2,8 @@
 
 `by Maximilian Schecklmann aka. Narrenschlag`
 
+`Dependencies: Cutulu SDK`
+
 #### Narrator
 
 > **FollowType**
