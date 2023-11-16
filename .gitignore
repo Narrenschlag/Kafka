@@ -21,3 +21,8 @@ mono_crash.*.json
 .DS_Store
 *~
 *.blend1
+*.import
+*.csproj
+*.sln
+*.v2
+*.vsidx

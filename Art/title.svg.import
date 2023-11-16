@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bc6hespg25bd5"
-path="res://.godot/imported/title.svg-aa3b22e8d032ddc3d81bbe16f3807524.ctex"
+path="res://.godot/imported/title.svg-7632cb269a403c27b9c8cd8ad93dd21e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Narrenschlag/Kafka/Art/title.svg"
-dest_files=["res://.godot/imported/title.svg-aa3b22e8d032ddc3d81bbe16f3807524.ctex"]
+source_file="res://Art/title.svg"
+dest_files=["res://.godot/imported/title.svg-7632cb269a403c27b9c8cd8ad93dd21e.ctex"]
 
 [params]
 

@@ -28,10 +28,17 @@ namespace Kafka.Editor
             LoadOrCreateFile("test", ".txt");
             SaveFile();
 
-            KNode node = new KNode();
-            node.Key = "key_01";
-            node.Statement.Name = "John Doe";
-            node.Statement.Text = "Lorem Ipsum";
+            KNode node;
+            if (Conversation.Entries.IsEmpty() || !Conversation.TryLoad(Conversation.Entries.Keys.First(), null, out node) || node.IsNull())
+                node = new KNode()
+                {
+                    Key = "key_01",
+                    Statement = new StatementContainer()
+                    {
+                        Name = "John Doe",
+                        Text = "Lorem Ipsum"
+                    }
+                };
 
             EditNode(ref node);
         }
@@ -58,12 +65,11 @@ namespace Kafka.Editor
 
         public static void EditNode(ref KNode node)
         {
+            if (NodeEditorInstance.NotNull()) NodeEditorInstance.Destroy();
             if (node.IsNull() || Window.IsNull()) return;
 
-            if (NodeEditorInstance.NotNull()) NodeEditorInstance.Destroy();
-
             NodeEditorInstance = Window.Instantiate<NodeEditor>(Root);
-            NodeEditorInstance.Setup(ref node);
+            NodeEditorInstance.Setup(Root, ref node);
         }
 
         public static void SaveNode(KNode node)

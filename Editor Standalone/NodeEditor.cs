@@ -3,7 +3,7 @@ using Godot;
 
 namespace Kafka.Editor
 {
-    public partial class NodeEditor : Window
+    public partial class NodeEditor : WindowBase
     {
         [Export] private LineEdit Key;
         [Export] private LineEdit Name;
@@ -12,19 +12,22 @@ namespace Kafka.Editor
         [Export] private Button saveButton;
         [Export] private Button settingButton;
 
+        private string initialKey;
         private KNode Node;
 
         public override void _EnterTree()
         {
             saveButton.ConnectButton(this, "saveValues");
             settingButton.ConnectButton(this, "openSettings");
-
-            this.Connect("close_requested", this, "close");
         }
 
-        public void Setup(ref KNode node)
+        public void Setup(Node parent, ref KNode node)
         {
+            base.Setup(parent);
+
+            initialKey = node.Key;
             Node = node;
+
             update();
         }
 
@@ -49,7 +52,11 @@ namespace Kafka.Editor
             Node.Statement.Name = Name.Text.Trim();
             Node.Key = Key.Text.Trim();
 
+            if (!initialKey.Equals(Node.Key)) Master.removeKey(initialKey);
+
             Master.SaveNode(Node);
+            initialKey = Node.Key;
+
             update();
         }
 
@@ -58,11 +65,6 @@ namespace Kafka.Editor
             if (Node.IsNull()) return;
 
             "Settings are not implemented yet.".LogError();
-        }
-
-        public void close()
-        {
-            this.Destroy();
         }
     }
 }

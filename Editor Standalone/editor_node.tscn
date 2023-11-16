@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://dvuchr07bdujd"]
+[gd_scene load_steps=6 format=3 uid="uid://dvuchr07bdujd"]
 
-[ext_resource type="Script" path="res://Narrenschlag/Kafka/Editor Standalone/NodeEditor.cs" id="1_2r8mb"]
+[ext_resource type="Script" path="res://Editor Standalone/NodeEditor.cs" id="1_2r8mb"]
+[ext_resource type="CodeHighlighter" uid="uid://s0eq161vm646" path="res://Editor Standalone/syntax.tres" id="2_wok1t"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8c05v"]
 bg_color = Color(0.133333, 0.133333, 0.133333, 1)
@@ -18,9 +19,13 @@ corner_radius_top_right = 10
 
 [node name="Window" type="Window" node_paths=PackedStringArray("Key", "Name", "Content", "saveButton", "settingButton")]
 title = "Node Editor"
-initial_position = 1
+initial_position = 2
 size = Vector2i(480, 270)
+exclusive = true
+unresizable = true
 always_on_top = true
+content_scale_mode = 1
+content_scale_aspect = 4
 script = ExtResource("1_2r8mb")
 Key = NodePath("VBoxContainer/Key/Key")
 Name = NodePath("VBoxContainer/Name/Name")
@@ -104,3 +109,17 @@ text = " Connection Settings "
 [node name="CodeEdit" type="CodeEdit" parent="VBoxContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+text = "Was willst du mit {get:playerName} sprechen?"
+placeholder_text = "enter text to be displayed in the chat box here."
+wrap_mode = 1
+highlight_all_occurrences = true
+syntax_highlighter = ExtResource("2_wok1t")
+scroll_smooth = true
+gutters_draw_line_numbers = true
+auto_brace_completion_enabled = true
+auto_brace_completion_highlight_matching = true
+auto_brace_completion_pairs = {
+"(": ")",
+"{": "}"
+}

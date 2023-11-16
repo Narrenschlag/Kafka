@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://4b2iu42tjnc2"]
 
-[ext_resource type="Script" path="res://Narrenschlag/Kafka/Editor Standalone/Master.cs" id="1_8yo5d"]
-[ext_resource type="PackedScene" uid="uid://dvuchr07bdujd" path="res://Narrenschlag/Kafka/Editor Standalone/editor_node.tscn" id="2_tkkrf"]
+[ext_resource type="Script" path="res://Editor Standalone/Master.cs" id="1_8yo5d"]
+[ext_resource type="PackedScene" uid="uid://dvuchr07bdujd" path="res://Editor Standalone/editor_node.tscn" id="2_tkkrf"]
 
 [node name="Editor" type="Control"]
 layout_mode = 3

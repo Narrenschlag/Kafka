@@ -1,0 +1,173 @@
+[gd_scene load_steps=4 format=3 uid="uid://dg2h78vqb3egu"]
+
+[ext_resource type="Script" path="res://Editor Standalone/SettingsEditor.cs" id="1_srwne"]
+[ext_resource type="CodeHighlighter" uid="uid://s0eq161vm646" path="res://Editor Standalone/syntax.tres" id="2_5kamq"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_766rj"]
+bg_color = Color(0.133333, 0.133333, 0.133333, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+
+[node name="Window" type="Window"]
+title = "Node Connections"
+initial_position = 2
+size = Vector2i(480, 271)
+exclusive = true
+unresizable = true
+always_on_top = true
+content_scale_mode = 1
+content_scale_aspect = 4
+script = ExtResource("1_srwne")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.180392, 0.180392, 0.180392, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="VBoxContainer/HBoxContainer/HBoxContainer2"]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_766rj")
+text = " Back "
+
+[node name="Button2" type="Button" parent="VBoxContainer/HBoxContainer/HBoxContainer2"]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_766rj")
+text = " Save "
+
+[node name="Control" type="Control" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Button3" type="Button" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_766rj")
+text = "  +  "
+
+[node name="CheckButton" type="CheckButton" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+text = "enable options"
+alignment = 2
+
+[node name="Options" type="Control" parent="VBoxContainer"]
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Options"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 0
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/Options/VBoxContainer"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+size_flags_vertical = 2
+
+[node name="ColorRect2" type="ColorRect" parent="VBoxContainer/Options/VBoxContainer"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+size_flags_vertical = 2
+color = Color(0.568627, 0.568627, 0.568627, 1)
+
+[node name="ColorRect3" type="ColorRect" parent="VBoxContainer/Options/VBoxContainer"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+size_flags_vertical = 2
+
+[node name="ColorRect4" type="ColorRect" parent="VBoxContainer/Options/VBoxContainer"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+size_flags_vertical = 2
+color = Color(0.392157, 1, 1, 1)
+
+[node name="Next" type="Control" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Background" type="ColorRect" parent="VBoxContainer/Next"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.133333, 0.133333, 0.133333, 1)
+metadata/_edit_use_anchors_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Next"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Next/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Next/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+tooltip_text = "Global: fileName:key_0
+Local: key_0
+
+No ending for fileName nessescary"
+
+[node name="Label" type="Label" parent="VBoxContainer/Next/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Next Unique Key"
+
+[node name="LineEdit" type="LineEdit" parent="VBoxContainer/Next/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "sample: key_0   or   keyFile:key_0"
+
+[node name="CodeEdit" type="CodeEdit" parent="VBoxContainer/Next/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+text = "{set:		string:		valueName=abc}
+{mod:		int:			valueName=10}
+{get:		char:		valueName}
+
+{global:	function0(0), 	function1()}
+{local:		function()}"
+placeholder_text = "write you commands in here and they will be parsed as soon as the next input is triggered
+{set:		string:		valueName=abc}
+{mod:		int:			valueName=10}
+{get:		char:		valueName}	- returns result as string
+{global:	function0(0), 	function1()}
+{local:		function()}"
+wrap_mode = 1
+syntax_highlighter = ExtResource("2_5kamq")
+gutters_draw_line_numbers = true
