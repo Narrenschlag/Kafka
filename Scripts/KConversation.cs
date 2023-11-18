@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Cutulu;
 using Godot;
+using static Cutulu.Modding;
 
 namespace Kafka
 {
@@ -23,7 +24,7 @@ namespace Kafka
             if (LocalPath.IsEmpty()) return false;
             LocalPath = LocalPath.Trim();
 
-            if (Modding.TryLoadModJson(LocalPath + ending, out Dictionary<string, StatementContainer> entries, folder))
+            if ((LocalPath + ending).TryFind(out var list) && list[0].TryReadJson(LocalPath + ending, out Dictionary<string, StatementContainer> entries))
             {
                 value = new KConversation();
                 value.LocalPath = LocalPath;
@@ -37,23 +38,22 @@ namespace Kafka
             return false;
         }
 
-            public static bool TryLoad(string LocalPath, string Key, out KConversation value, bool ValidateDefaultFilesForDialogue = true, string LangFileEnding = KConversation.LangFileEnding, string DefaultLangFileEnding = KConversation.DefaultLangFileEnding)
+        public static bool TryLoad(string LocalPath, string Key, out KConversation value, bool ValidateDefaultFilesForDialogue = true, string LangFileEnding = LangFileEnding, string DefaultLangFileEnding = DefaultLangFileEnding)
         {
-            string _ending = LangFileEnding;
             value = null;
 
             if (LocalPath.IsEmpty()) return false;
             LocalPath = LocalPath.Trim();
 
             #region File Validation
-            Dictionary<string, StatementContainer> entries = null;
+            Dictionary<string, StatementContainer> entries;
+            string _ending;
+
             if (ValidateDefaultFilesForDialogue)
             {
                 if (
-                    invalidate(LangFileEnding, true) &&              // mod: real ending
-                    invalidate(DefaultLangFileEnding, true) &&       // mod: default
-                    invalidate(LangFileEnding, false) &&             // res: real ending
-                    invalidate(DefaultLangFileEnding, false)         // res: default
+                    invalidate(LangFileEnding, out entries) &&                // real ending
+                    invalidate(DefaultLangFileEnding, out entries)            // default
                     )
                     return false;
             }
@@ -61,43 +61,45 @@ namespace Kafka
             else
             {
                 if (
-                    invalidate(LangFileEnding, true) &&              // mod
-                    invalidate(LangFileEnding, false)                // res
+                    invalidate(LangFileEnding, out entries)                   // real ending
                     )
                     return false;
             }
-
-            string metaPath(string ending) => Folder + LocalPath + ending + ".meta";
-            string path(string ending) => Folder + LocalPath + ending;
-
-            // Uses a .meta file to speed up the validation process
-            bool invalidate(string ending, bool mod)
-            {
-                _ending = ending;
-
-                if (mod)
-                {
-                    if (!Modding.TryLoadModJson(metaPath(ending), out List<string> meta)) return true;
-                    if (!meta.Contains(Key)) return true;
-
-                    return !Modding.TryLoadModJson(path(ending), out entries);
-                }
-
-                else
-                {
-                    if (!Modding.TryLoadAssetJson(metaPath(ending), out List<string> meta)) return true;
-                    if (!meta.Contains(Key)) return true;
-
-                    return !Modding.TryLoadAssetJson(path(ending), out entries);
-                }
-            }
-            #endregion
 
             value = new KConversation();
             value.LocalPath = LocalPath;
             value.Entries = entries;
             value.Ending = _ending;
             return true;
+
+            string path(string ending) => Folder + LocalPath + ending;
+            string metaPath(string ending) => path(ending) + ".meta";
+
+            // Uses a .meta file to speed up the validation process
+            bool invalidate(string ending, out Dictionary<string, StatementContainer> entries)
+            {
+                if (Modding.TryFind(metaPath(_ending = ending), out var list))
+                {
+                    foreach (var item in list)
+                    {
+                        if (item.TryReadJson(metaPath(ending), out List<string> meta))
+                        {
+                            if (meta.Contains(Key))
+                            {
+                                if (item.TryReadJson(path(ending), out entries))
+                                {
+                                    _ending = ending;
+                                    return false;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                entries = null;
+                return true;
+            }
+            #endregion
         }
 
         public bool TryLoad(string Key, Node Node, out KNode value)

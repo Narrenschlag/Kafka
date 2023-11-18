@@ -3,12 +3,12 @@
 importer="oggvorbisstr"
 type="AudioStreamOggVorbis"
 uid="uid://b03lnnwd8f1ul"
-path="res://.godot/imported/O.ogg-ca174e985e2fff412fffb193213d7fa2.oggvorbisstr"
+path="res://.godot/imported/O.ogg-86af64889d26c0519773e27485c5472e.oggvorbisstr"
 
 [deps]
 
-source_file="res://Art/O.ogg"
-dest_files=["res://.godot/imported/O.ogg-ca174e985e2fff412fffb193213d7fa2.oggvorbisstr"]
+source_file="res://Narrenschlag/Kafka/Art/O.ogg"
+dest_files=["res://.godot/imported/O.ogg-86af64889d26c0519773e27485c5472e.oggvorbisstr"]
 
 [params]
 

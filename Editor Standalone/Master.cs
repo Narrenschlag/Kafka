@@ -91,12 +91,10 @@ namespace Kafka.Editor
         {
             if (Conversation.IsNull()) return;
 
-            string path = Conversation.LocalPath.LocalToGlobal(IO.USER_PATH + FileFolder) + Conversation.Ending;
-            path.WriteText(Conversation.json());
+            string path = FileFolder + Conversation.LocalPath + Conversation.Ending;
+            Modding.Mods.WriteJson(path, Conversation);
 
-            string meta = Conversation.Entries.Keys.json();
-            $"{path}.meta".WriteText(meta);
-
+            Modding.Mods.WriteJson(path + ".meta", Conversation.Entries.Keys);
             $"Saved file and meta.".Log();
         }
 

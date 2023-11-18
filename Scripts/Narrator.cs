@@ -41,7 +41,7 @@ namespace Kafka
 
 		public override void _Ready()
 		{
-			reload();
+
 		}
 
 		#region Load Functions
@@ -93,7 +93,7 @@ namespace Kafka
 			if (Conversation.NotNull())
 				Conversation.TryLoad(key, source, out KNode);
 
-			reload();
+            reload();
 		}
 		#endregion
 
@@ -111,10 +111,11 @@ namespace Kafka
 
 			// Printer
 			if (Printer.NotNull()) Printer.SetActive(Valid);
-			if (Valid && Printer.NotNull()) Printer.Print(KNode.Statement);
 
-			// For custom visuals
-			if (VisibleCasts.NotEmpty())
+            if (Valid && Printer.NotNull()) Printer.Print(KNode.Statement);
+
+            // For custom visuals
+            if (VisibleCasts.NotEmpty())
 				foreach (Control c in VisibleCasts)
 					if (c.NotNull()) c.Visible = Valid;
 		}
