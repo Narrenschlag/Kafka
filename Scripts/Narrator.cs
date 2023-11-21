@@ -39,20 +39,7 @@ namespace Kafka
 			Singleton = this;
 		}
 
-		public override void _Ready()
-		{
-
-		}
-
 		#region Load Functions
-		private static void GlobalToLocal(string globalKey, out string path, out string localKey)
-		{
-			path = globalKey.TrimToDirectory();
-
-			localKey = globalKey.Substring(path.Length + 1, globalKey.Length - path.Length - 1);
-			path = path.Remove(path.Length);
-		}
-
 		public static void SetLocalNode(Node node) { if (node.NotNull() && Singleton.NotNull() && Singleton.Valid) Singleton.KNode.LocalNode = node; }
 		public static Node GetLocalNode() => Singleton.NotNull() && Singleton.Valid ? Singleton.KNode.LocalNode : null;
 		public static void Load(string globalOrLocalKey, Node source)
@@ -93,7 +80,7 @@ namespace Kafka
 			if (Conversation.NotNull())
 				Conversation.TryLoad(key, source, out KNode);
 
-            reload();
+			reload();
 		}
 		#endregion
 
@@ -112,10 +99,10 @@ namespace Kafka
 			// Printer
 			if (Printer.NotNull()) Printer.SetActive(Valid);
 
-            if (Valid && Printer.NotNull()) Printer.Print(KNode.Statement);
+			if (Valid && Printer.NotNull()) Printer.Print(KNode.Statement);
 
-            // For custom visuals
-            if (VisibleCasts.NotEmpty())
+			// For custom visuals
+			if (VisibleCasts.NotEmpty())
 				foreach (Control c in VisibleCasts)
 					if (c.NotNull()) c.Visible = Valid;
 		}

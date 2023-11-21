@@ -22,14 +22,18 @@ namespace Kafka
             value = null;
 
             if (LocalPath.IsEmpty()) return false;
+
+            string path = folder + LocalPath + ending;
             LocalPath = LocalPath.Trim();
 
-            if ((LocalPath + ending).TryFind(out var list) && list[0].TryReadJson(LocalPath + ending, out Dictionary<string, StatementContainer> entries))
+            if (path.TryFind(out var list) && list[0].TryReadJson(path, out Dictionary<string, StatementContainer> entries))
             {
-                value = new KConversation();
-                value.LocalPath = LocalPath;
-                value.Entries = entries;
-                value.Ending = ending;
+                value = new KConversation
+                {
+                    LocalPath = LocalPath,
+                    Entries = entries,
+                    Ending = ending
+                };
 
                 return true;
             }
@@ -66,12 +70,6 @@ namespace Kafka
                     return false;
             }
 
-            value = new KConversation();
-            value.LocalPath = LocalPath;
-            value.Entries = entries;
-            value.Ending = _ending;
-            return true;
-
             string path(string ending) => Folder + LocalPath + ending;
             string metaPath(string ending) => path(ending) + ".meta";
 
@@ -100,6 +98,16 @@ namespace Kafka
                 return true;
             }
             #endregion
+
+            "Found dialogue...".Log();
+
+            value = new KConversation
+            {
+                LocalPath = LocalPath,
+                Entries = entries,
+                Ending = _ending
+            };
+            return true;
         }
 
         public bool TryLoad(string Key, Node Node, out KNode value)

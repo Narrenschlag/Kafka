@@ -11,7 +11,7 @@ script = ExtResource("1_ywnnv")
 Printer = NodePath("../Printer")
 VisibleCasts = []
 
-[node name="Debugger" type="Node" parent="Narrator" node_paths=PackedStringArray("Narrator")]
+[node name="debug" type="Node" parent="Narrator" node_paths=PackedStringArray("Narrator")]
 script = ExtResource("2_tkxlc")
 Narrator = NodePath("..")
 GlobalPath = "test:0"
