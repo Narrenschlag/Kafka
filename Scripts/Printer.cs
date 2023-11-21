@@ -187,23 +187,23 @@ namespace Kafka
                     switch (type.ToLower()[0])
                     {
                         case 'i':
-                            TempPrefs.Set(valueName, int.Parse(newValue));
+                            TempData.Set(valueName, int.Parse(newValue));
                             break;
 
                         case 'f':
-                            TempPrefs.Set(valueName, float.Parse(newValue));
+                            TempData.Set(valueName, float.Parse(newValue));
                             break;
 
                         case 'd':
-                            TempPrefs.Set(valueName, double.Parse(newValue));
+                            TempData.Set(valueName, double.Parse(newValue));
                             break;
 
                         case 'c':
-                            TempPrefs.Set(valueName, newValue[0]);
+                            TempData.Set(valueName, newValue[0]);
                             break;
 
                         case 's':
-                            TempPrefs.Set(valueName, newValue);
+                            TempData.Set(valueName, newValue);
                             break;
 
                         default: continue;
@@ -224,19 +224,19 @@ namespace Kafka
                     switch (type.ToLower()[0])
                     {
                         case 'i':
-                            TempPrefs.Set(valueName, TempPrefs.Get(valueName, 0) + int.Parse(newValue));
+                            TempData.Set(valueName, TempData.Get(valueName, 0) + int.Parse(newValue));
                             break;
 
                         case 'f':
-                            TempPrefs.Set(valueName, TempPrefs.Get(valueName, 0f) + float.Parse(newValue));
+                            TempData.Set(valueName, TempData.Get(valueName, 0f) + float.Parse(newValue));
                             break;
 
                         case 'd':
-                            TempPrefs.Set(valueName, TempPrefs.Get(valueName, 0d) + double.Parse(newValue));
+                            TempData.Set(valueName, TempData.Get(valueName, 0d) + double.Parse(newValue));
                             break;
 
                         case 's':
-                            TempPrefs.Set(valueName, TempPrefs.Get(valueName, 0) + newValue);
+                            TempData.Set(valueName, TempData.Get(valueName, 0) + newValue);
                             break;
 
                         default: continue;
@@ -257,23 +257,23 @@ namespace Kafka
 					switch (type.ToLower()[0])
 					{
 						case 'i':
-							obj = TempPrefs.Get(valueName, 0);
+							obj = TempData.Get(valueName, 0);
 							break;
 
 						case 'f':
-							obj = TempPrefs.Get(valueName, 0f);
+							obj = TempData.Get(valueName, 0f);
 							break;
 
 						case 'd':
-							obj = TempPrefs.Get(valueName, 0d);
+							obj = TempData.Get(valueName, 0d);
 							break;
 
 						case 'c':
-							obj = TempPrefs.Get(valueName, ' ');
+							obj = TempData.Get(valueName, ' ');
 							break;
 
 						case 's':
-							obj = TempPrefs.Get(valueName, "");
+							obj = TempData.Get(valueName, "");
 							break;
 
 						default: continue;
