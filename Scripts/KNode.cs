@@ -8,8 +8,10 @@ namespace Kafka
     public partial class KNode : Resource
     {
         public StatementContainer Statement = new StatementContainer();
-        public string[] optionStrings;
 
+        public string[] optionStrings;
+        public string[] optionKeys;
+        
         public Node LocalNode;
         public string Key;
 

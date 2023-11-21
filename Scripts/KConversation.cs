@@ -110,24 +110,105 @@ namespace Kafka
             return true;
         }
 
-        public bool TryLoad(string Key, Node Node, out KNode value)
+        public bool TryLoad(string Key, Node Node, out KNode nodeValue)
         {
-            value = null;
+            nodeValue = null;
 
             if (!Entries.TryGetValue(Key = Key.Trim(), out StatementContainer statement)) return false;
 
-            value = new KNode();
-            value.Statement = statement;
-            value.LocalNode = Node;
-            value.Key = Key;
+            nodeValue = new KNode
+            {
+                Statement = statement,
+                LocalNode = Node,
+                Key = Key
+            };
 
-            if (statement.Options.IsEmpty()) value.optionStrings = null;
+            #region  Requiments reading
+            if (statement.Options.IsEmpty()) nodeValue.optionStrings = null;
             else
             {
-                value.optionStrings = new string[statement.Options.Length];
-                for (int i = 0; i < statement.Options.Length; i++)
-                    value.optionStrings[i] = statement.Options[i].Value;
+                // Check for requirement
+                List<(string, string)> list = new List<(string, string)>();
+                foreach ((string key, string val) in statement.Options)
+                {
+                    if (val.IsEmpty()) continue;
+                    if (val.Contains("{req:"))
+                    {
+                        NestedString nestedString = NestedString.Parse(val, "{req", "", ':', '}');
+                        bool add = true;
+
+                        string[] lines = nestedString.ReadValues("{req");
+                        foreach (string line in lines)
+                        {
+                            // Incorrect format
+                            if (!parse(line, ':', out string k, out string _v))
+                                continue;
+
+                            // No indicators
+                            if (!_v.Contains('>') && !_v.Contains('=') && !_v.Contains('<'))
+                                continue;
+
+                            _v.Extract(new List<char>() { '<', '=', '!', '>' }, out string[] args, true);
+                            if (args.NotEmpty() && args.Length >= 2)
+                            {
+                                bool greater = _v.Contains('>');
+                                bool smaller = _v.Contains('=');
+                                bool noEqual = _v.Contains("!=");
+                                bool equal = !noEqual && _v.Contains('=');
+                                switch (k[0])
+                                {
+                                    // Check string requirement
+                                    case 's':
+                                        if (noEqual || equal)
+                                        {
+                                            string _s = TempData.Get(args[0], "");
+                                            if (_s.Trim().Equals(args[1].Trim()))
+                                                add = equal;
+                                        }
+
+                                        break;
+
+                                    // TODO: add integer, float, double
+                                    case 'i':
+
+                                        break;
+
+                                    default:
+                                        break;
+                                }
+                            }
+                        }
+
+                        if (add) list.Add((key, nestedString.Value));
+                    }
+
+                    else list.Add((key, val));
+                }
+
+                if (list.NotEmpty())
+                {
+                    int _i = -1;
+                    foreach ((string k, string v) in list)
+                    {
+                        nodeValue.optionKeys[++_i] = k;
+                        nodeValue.optionStrings[_i] = v;
+                    }
+                }
+
+                bool parse(string line, char sep, out string key, out string value)
+                {
+                    string[] args = line.Split(sep, System.StringSplitOptions.RemoveEmptyEntries | System.StringSplitOptions.TrimEntries);
+                    value = default;
+                    key = default;
+
+                    if (args.IsEmpty() || args.Length < 2) return false;
+
+                    value = args[1];
+                    key = args[0];
+                    return true;
+                }
             }
+            #endregion
 
             return true;
         }
