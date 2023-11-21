@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://gfr72pegv4bp"]
+[gd_scene load_steps=5 format=3 uid="uid://gfr72pegv4bp"]
 
 [ext_resource type="Script" path="res://Narrenschlag/Kafka/Scripts/Narrator.cs" id="1_ywnnv"]
 [ext_resource type="Script" path="res://Narrenschlag/Kafka/Scripts/Debug.cs" id="2_tkxlc"]
 [ext_resource type="Script" path="res://Narrenschlag/Kafka/Scripts/Printer.cs" id="3_7dfii"]
+[ext_resource type="Script" path="res://Narrenschlag/Kafka/Scripts/TempData.cs" id="4_ic87x"]
 
 [node name="Node" type="Node"]
 
@@ -20,3 +21,6 @@ Active = true
 [node name="Printer" type="Node" parent="."]
 script = ExtResource("3_7dfii")
 Output = 3
+
+[node name="Data Manager" type="Node" parent="."]
+script = ExtResource("4_ic87x")
