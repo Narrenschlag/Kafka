@@ -38,6 +38,6 @@ Espescially useful for chatting with the player and showing data without opening
 > 
 > `{req:int:playerMoney >= 1000}` 
 > 
-> `{req:float:progress:0.1}`
+> `{req:float:progress < 1.0}`
 
 Used for progress based dialogue options in Rpgs, gathering quests and more.
