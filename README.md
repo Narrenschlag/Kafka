@@ -31,3 +31,13 @@ String command syntax is encapsuled by '{' '}' brackets. The key parameter defin
 > `{get:string:playerName}`
 
 Espescially useful for chatting with the player and showing data without opening an extra window. This way characters can talk to the player with it's given name, can talk about the weather, make compliments about items and much more.
+
+#### Option Requirements
+
+> `{req:string:playerName = Max}` 
+> 
+> `{req:int:playerMoney >= 1000}` 
+> 
+> `{req:float:progress:0.1}`
+
+Used for progress based dialogue options in Rpgs, gathering quests and more.
