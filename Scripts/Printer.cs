@@ -20,19 +20,20 @@ namespace Kafka
 		[Signal] public delegate void StringCmdEventHandler(string cmd, string[] args);
 		public StringCmdEventHandler onCmd;
 
-		public void Print(StatementContainer state)
+		public void Print(KNode node)
 		{
-            // Enrich texts
-            (string cmd, string[] args, bool local)[] cmds = ExtractCmds(state.Text, out string content);
-			string title = EnrichString(state.Name);
+			if (node.IsNull()) return;
+
+			// Enrich texts
+			(string cmd, string[] args, bool local)[] cmds = ExtractCmds(node.Statement.Text, out string content);
+			string title = EnrichString(node.Statement.Name);
 
 			// Enrich the options
-			string[] options = state.Options.IsEmpty() ? null : new string[state.Options.Length];
-
-			if (options.NotEmpty()) 
+			string[] options = node._options.IsEmpty() ? null : new string[node._options.Length];
+			if (options.NotEmpty())
 				for (int i = 0; i < options.Length; i++)
 				{
-					ExtractCmds(state.Options[i].Value, out string optionText);
+					ExtractCmds(node._options[i].Value, out string optionText);
 					options[i] = EnrichString(optionText);
 				}
 
@@ -44,10 +45,10 @@ namespace Kafka
 			{
 				$"{title}> {content}".Log();
 
-				if (state.Options.NotEmpty())
-					for (int i = 0; i < state.Options.Length; i++)
-						$"  > '{options[i]}' [{state.Options[i].Key}]".Log();
-				else $"  >[{state.Next.Key}]".Log();
+				if (node._options.NotEmpty())
+					for (int i = 0; i < node._options.Length; i++)
+						$"  > '{options[i]}' [{node._options[i].Key}]".Log();
+				else $"  >[{node.next.Key}]".Log();
 
 				if (cmds.NotEmpty())
 				{
@@ -121,26 +122,26 @@ namespace Kafka
 		}
 
 		// Comment order reflects the order of function calls
-        #region NestedString Utilized
-        // {local:turnAround()}
-        // {global:saveValue(1)}
-        #region String Command Utility
-        private const char SEP_CHAR = ',';
+		#region NestedString Utilized
+		// {local:turnAround()}
+		// {global:saveValue(1)}
+		#region String Command Utility
+		private const char SEP_CHAR = ',';
 		private const char OPN_CHAR = '(';
 		private const char CLS_CHAR = ')';
 
 		private static (string cmd, string[] args, bool local)[] ExtractCmds(string plainText, out string message)
-        {
-            NestedString nestedString = NestedString.Parse(plainText, new string[2] { "{global", "{local"}, "", ':', '}');
+		{
+			NestedString nestedString = NestedString.Parse(plainText, new string[2] { "{global", "{local" }, "", ':', '}');
 			message = nestedString.Value;
 
 			// List of results
-            List<(string cmd, string[] args, bool local)> result = new List<(string cmd, string[] args, bool local)>();
+			List<(string cmd, string[] args, bool local)> result = new List<(string cmd, string[] args, bool local)>();
 
 			// Local functions
 			read(nestedString.ReadValues("{local"), true);
 
-            // Global functions
+			// Global functions
 			read(nestedString.ReadValues("{global"), false);
 
 			// Shortcut function
@@ -167,87 +168,87 @@ namespace Kafka
 		}
 		#endregion
 
-        // {set:integer:playerHealth=10}
-        // {mod:integer:playerHealth=-2}
-        // {get:string:playername}
+		// {set:integer:playerHealth=10}
+		// {mod:integer:playerHealth=-2}
+		// {get:string:playername}
 		#region Text Enrichment
 		public static string EnrichString(string plainText)
 		{
 			NestedString nestedString = NestedString.Parse(plainText, new string[3] { "{get", "{mod", "{set" }, "", ':', '}');
 			int removed = 0;
 
-            // Set values
-            (string value, int start, int last)[] lines = nestedString.ReadValues2("{set");
-            if (lines.NotEmpty())
-                foreach ((string value, int start, int last) in lines)
-                {
-                    if (!parse(value, ':', out string type, out string valueSet)) continue;
-                    if (!parse(valueSet, '=', out string valueName, out string newValue)) continue;
+			// Set values
+			(string value, int start, int last)[] lines = nestedString.ReadValues2("{set");
+			if (lines.NotEmpty())
+				foreach ((string value, int start, int last) in lines)
+				{
+					if (!parse(value, ':', out string type, out string valueSet)) continue;
+					if (!parse(valueSet, '=', out string valueName, out string newValue)) continue;
 
-                    switch (type.ToLower()[0])
-                    {
-                        case 'i':
-                            TempData.Set(valueName, int.Parse(newValue));
-                            break;
+					switch (type.ToLower()[0])
+					{
+						case 'i':
+							TempData.Set(valueName, int.Parse(newValue));
+							break;
 
-                        case 'f':
-                            TempData.Set(valueName, float.Parse(newValue));
-                            break;
+						case 'f':
+							TempData.Set(valueName, float.Parse(newValue));
+							break;
 
-                        case 'd':
-                            TempData.Set(valueName, double.Parse(newValue));
-                            break;
+						case 'd':
+							TempData.Set(valueName, double.Parse(newValue));
+							break;
 
-                        case 'c':
-                            TempData.Set(valueName, newValue[0]);
-                            break;
+						case 'c':
+							TempData.Set(valueName, newValue[0]);
+							break;
 
-                        case 's':
-                            TempData.Set(valueName, newValue);
-                            break;
+						case 's':
+							TempData.Set(valueName, newValue);
+							break;
 
-                        default: continue;
-                    }
+						default: continue;
+					}
 
 					plainText.Remove(start - removed, last - start + 1 - removed);
 					removed += last - start + 1;
-                }
+				}
 
-            // Mod values
-            lines = nestedString.ReadValues2("{mod");
-            if (lines.NotEmpty())
-                foreach ((string value, int start, int last) in lines)
-                {
-                    if (!parse(value, ':', out string type, out string valueSet)) continue;
-                    if (!parse(valueSet, '=', out string valueName, out string newValue)) continue;
+			// Mod values
+			lines = nestedString.ReadValues2("{mod");
+			if (lines.NotEmpty())
+				foreach ((string value, int start, int last) in lines)
+				{
+					if (!parse(value, ':', out string type, out string valueSet)) continue;
+					if (!parse(valueSet, '=', out string valueName, out string newValue)) continue;
 
-                    switch (type.ToLower()[0])
-                    {
-                        case 'i':
-                            TempData.Set(valueName, TempData.Get(valueName, 0) + int.Parse(newValue));
-                            break;
+					switch (type.ToLower()[0])
+					{
+						case 'i':
+							TempData.Set(valueName, TempData.Get(valueName, 0) + int.Parse(newValue));
+							break;
 
-                        case 'f':
-                            TempData.Set(valueName, TempData.Get(valueName, 0f) + float.Parse(newValue));
-                            break;
+						case 'f':
+							TempData.Set(valueName, TempData.Get(valueName, 0f) + float.Parse(newValue));
+							break;
 
-                        case 'd':
-                            TempData.Set(valueName, TempData.Get(valueName, 0d) + double.Parse(newValue));
-                            break;
+						case 'd':
+							TempData.Set(valueName, TempData.Get(valueName, 0d) + double.Parse(newValue));
+							break;
 
-                        case 's':
-                            TempData.Set(valueName, TempData.Get(valueName, 0) + newValue);
-                            break;
+						case 's':
+							TempData.Set(valueName, TempData.Get(valueName, 0) + newValue);
+							break;
 
-                        default: continue;
-                    }
+						default: continue;
+					}
 
-                    plainText.Remove(start - removed, last - start + 1 - removed);
-                    removed += last - start + 1;
-                }
+					plainText.Remove(start - removed, last - start + 1 - removed);
+					removed += last - start + 1;
+				}
 
-            // Get values
-            lines = nestedString.ReadValues2("{get");
+			// Get values
+			lines = nestedString.ReadValues2("{get");
 			if (lines.NotEmpty())
 				foreach ((string value, int start, int last) in lines)
 				{
@@ -303,12 +304,12 @@ namespace Kafka
 		}
 
 		enum Type { String, Float, Int }
-        #endregion
-        #endregion
+		#endregion
+		#endregion
 
-        #region Built-In Cmds
-        // Return true to skip the signal/delegate emission
-        protected virtual bool BuiltInCmd(string cmd, string[] args)
+		#region Built-In Cmds
+		// Return true to skip the signal/delegate emission
+		protected virtual bool BuiltInCmd(string cmd, string[] args)
 		{
 			switch (cmd)
 			{

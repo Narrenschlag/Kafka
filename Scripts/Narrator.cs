@@ -94,12 +94,12 @@ namespace Kafka
 			Valid = Conversation.NotNull() && KNode.NotNull();
 
 			// Follow type
-			FollowType = !Valid ? FollowType.Close : KNode.optionStrings.NotEmpty() ? FollowType.Options : FollowType.Next;
+			FollowType = !Valid ? FollowType.Close : KNode._options.NotEmpty() ? FollowType.Options : FollowType.Next;
 
 			// Printer
 			if (Printer.NotNull()) Printer.SetActive(Valid);
 
-			if (Valid && Printer.NotNull()) Printer.Print(KNode.Statement);
+			if (Valid && Printer.NotNull()) Printer.Print(KNode);
 
 			// For custom visuals
 			if (VisibleCasts.NotEmpty())
