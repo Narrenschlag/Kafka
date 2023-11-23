@@ -2,27 +2,30 @@ using Kafka.Editor;
 using Godot;
 using Kafka;
 
-public partial class SettingsEditor : WindowBase
+namespace Kafka.Editor
 {
-    [Export] private PackedScene Prefab;
-    [Export] private Node Root;
-
-    private KNode node;
-
-    public virtual void Load(ref KNode node)
+    public partial class SettingsEditor : WindowBase
     {
-        this.node = node;
+        [Export] private PackedScene Prefab;
+        [Export] private Node Root;
 
-        update();
-    }
+        private KNode node;
 
-    public virtual void update()
-    {
+        public virtual void Load(ref KNode node)
+        {
+            this.node = node;
 
-    }
+            update();
+        }
 
-    public virtual void save()
-    {
-        Master.SaveNode(node);
+        public virtual void update()
+        {
+
+        }
+
+        public virtual void save()
+        {
+            Master.SaveNode(node);
+        }
     }
 }

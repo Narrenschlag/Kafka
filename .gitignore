@@ -26,3 +26,4 @@ mono_crash.*.json
 *.sln
 *.v2
 *.vsidx
+*.import
