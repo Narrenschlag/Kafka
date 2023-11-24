@@ -132,6 +132,18 @@ namespace Kafka
                                         }
                                         break;
 
+                                    // Bool
+                                    case 'b':
+                                        if (!bool.TryParse(args[1], out bool value))
+                                            add = false;
+
+                                        else
+                                        {
+                                            add = TempData.Get(args[0], false) == equal;
+                                        }
+
+                                        break;
+
                                     default:
                                         break;
                                 }
